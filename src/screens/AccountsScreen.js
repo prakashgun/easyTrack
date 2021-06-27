@@ -1,8 +1,11 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { ListItem, Button, Icon } from 'react-native-elements'
+import { getRepository } from 'typeorm/browser'
+import Utils from '../common/utils'
 import HeaderBar from '../components/HeaderBar'
+import { Category } from '../entities/Category'
 
 
 export default function AccountsScreen() {
@@ -22,6 +25,32 @@ export default function AccountsScreen() {
             amount: 125000
         }
     ]
+
+    const createCategories = async () => {
+        await Utils.createConnection()
+
+        const categoryRepository = getRepository(Category)
+
+        const category1 = new Category()
+        category1.name = 'Food'
+        category1.icon = 'youtube'
+        await categoryRepository.save(category1)
+
+        const category2 = new Category()
+        category2.name = 'Shopping'
+        category2.icon = 'shopping-basket'
+        await categoryRepository.save(category2)
+
+        console.log('Categories saved')
+
+        const categories = await categoryRepository.find({ take: 5 })
+        console.log(categories)
+
+    }
+
+    useEffect(() => {
+        createCategories()
+    }, [])
 
     const onDeletePress = () => {
         console.log('Delete pressed')
@@ -59,7 +88,7 @@ export default function AccountsScreen() {
             }
             <ListItem>
                 <Icon name="account-balance-wallet" type="material-icons" />
-                <ListItem.Content> 
+                <ListItem.Content>
                     <ListItem.Title>Balance</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Content right={true}>
