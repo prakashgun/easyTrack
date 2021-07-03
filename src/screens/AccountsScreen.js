@@ -1,15 +1,17 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { ListItem, Button, Icon } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import Utils from '../common/utils'
 import HeaderBar from '../components/HeaderBar'
+import { Account } from '../entities/Account'
 import { Category } from '../entities/Category'
 
 
 export default function AccountsScreen() {
     const navigation = useNavigation()
+    const [accounts, setAccounts] = useState([])
 
     const list = [
         {
@@ -26,35 +28,31 @@ export default function AccountsScreen() {
         }
     ]
 
-    const createCategories = async () => {
+    const createAccounts = async () => {
         await Utils.createConnection()
 
-        const categoryRepository = getRepository(Category)
+        const accountRepository = getRepository(Account)
 
-        const categoriesCount = await categoryRepository.count()
+        const accountsCount = await accountRepository.count()
 
-        if (categoriesCount === 0) {
-            const category1 = new Category()
-            category1.name = 'Food'
-            category1.icon = 'youtube'
-            await categoryRepository.save(category1)
+        if (accountsCount === 0) {
+            const account1 = new Account()
+            account1.name = 'Cash'
+            account1.balance = 0
+            await accountRepository.save(account1)
 
-            const category2 = new Category()
-            category2.name = 'Shopping'
-            category2.icon = 'shopping-basket'
-            await categoryRepository.save(category2)
-
-            console.log('Default categories saved')
+            console.log('Default accounts saved')
         }
 
-        const categories = await categoryRepository.find({ take: 5 })
+        const accounts = await accountRepository.find({ take: 5 })
 
-        console.log(categories)
+        console.log('Accounts', accounts)
+        setAccounts(accounts)
 
     }
 
     useEffect(() => {
-        createCategories()
+        createAccounts()
     }, [])
 
     const onDeletePress = () => {
@@ -69,7 +67,7 @@ export default function AccountsScreen() {
         <View>
             <HeaderBar title="Accounts" />
             {
-                list.map((l, i) => (
+                accounts.map((l, i) => (
                     <ListItem.Swipeable
                         key={i}
                         bottomDivider
@@ -81,12 +79,12 @@ export default function AccountsScreen() {
                                 onPress={onDeletePress} />
                         }
                     >
-                        <Icon name={l.icon_name} type={l.icon_type} />
+                        <Icon name="bank" type="font-awesome" />
                         <ListItem.Content>
                             <ListItem.Title>{l.name}</ListItem.Title>
                         </ListItem.Content>
                         <ListItem.Content right={true}>
-                            <ListItem.Title>{l.amount}</ListItem.Title>
+                            <ListItem.Title>{l.balance}</ListItem.Title>
                         </ListItem.Content>
                     </ListItem.Swipeable>
                 ))
