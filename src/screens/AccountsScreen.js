@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { ListItem, Button, Icon } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
@@ -31,19 +31,24 @@ export default function AccountsScreen() {
 
         const categoryRepository = getRepository(Category)
 
-        const category1 = new Category()
-        category1.name = 'Food'
-        category1.icon = 'youtube'
-        await categoryRepository.save(category1)
+        const categoriesCount = await categoryRepository.count()
 
-        const category2 = new Category()
-        category2.name = 'Shopping'
-        category2.icon = 'shopping-basket'
-        await categoryRepository.save(category2)
+        if (categoriesCount === 0) {
+            const category1 = new Category()
+            category1.name = 'Food'
+            category1.icon = 'youtube'
+            await categoryRepository.save(category1)
 
-        console.log('Categories saved')
+            const category2 = new Category()
+            category2.name = 'Shopping'
+            category2.icon = 'shopping-basket'
+            await categoryRepository.save(category2)
+
+            console.log('Default categories saved')
+        }
 
         const categories = await categoryRepository.find({ take: 5 })
+
         console.log(categories)
 
     }
