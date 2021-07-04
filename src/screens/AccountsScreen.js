@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { ListItem, Button, Icon } from 'react-native-elements'
@@ -52,8 +52,18 @@ export default function AccountsScreen() {
     }
 
     useEffect(() => {
+        //First loading
         createAccounts()
     }, [])
+
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', async ()=>{
+            //Screen is focused
+            const accountRepository = getRepository(Account)
+            const accounts = await accountRepository.find({ take: 5 })
+            setAccounts(accounts)
+        })        
+    }, [navigation])
 
     const onDeletePress = () => {
         console.log('Delete pressed')

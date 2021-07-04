@@ -10,7 +10,7 @@ export default class Utils {
                 type: 'react-native',
                 database: 'easy_track',
                 location: 'default',
-                synchronize: true, 
+                synchronize: false, 
                 logging: ['error', 'query', 'schema'],
                 entities: [Account, Category, Expense],
             })
