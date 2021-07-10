@@ -1,11 +1,13 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { useCallback } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { Connection, getRepository } from 'typeorm/browser'
 import Utils from '../common/utils'
 import HeaderBar from '../components/HeaderBar'
+import AppContext from '../context/AppContext'
 import { Account } from '../entities/Account'
 
 interface Props {
@@ -13,7 +15,7 @@ interface Props {
 
 const AccountsScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const [accounts, setAccounts] = useState<Account[]>([])
+    const {accounts, updateAccounts} = useContext(AppContext)
     const [connection, setConnection] = useState<Connection | null>(null)
 
     const list = [
@@ -31,15 +33,9 @@ const AccountsScreen: React.FC<Props> = () => {
         }
     ]
 
-    const getAccounts = async () => {
-        console.log('Calling setAccounts')
-        const accountRepository = await getRepository(Account, 'easy_track')
-        setAccounts(await accountRepository.find({ take: 5 }))
-    }
-
     const setUpConnection = useCallback(async () => {
         setConnection(await Utils.createConnection())
-        await getAccounts()
+        await updateAccounts()
     }, [])
 
 
@@ -49,7 +45,7 @@ const AccountsScreen: React.FC<Props> = () => {
             setUpConnection()
         } else {
             console.log('Calling getAccounts')
-            getAccounts()
+            updateAccounts()
         }
     }, [])
 
@@ -66,7 +62,7 @@ const AccountsScreen: React.FC<Props> = () => {
         const accountRepository = await getRepository(Account, 'easy_track')
         await accountRepository.remove(account)
         console.log('Account deleted')
-        getAccounts()
+        await updateAccounts()
     }
 
     const onAddItemPress = () => {

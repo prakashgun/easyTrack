@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import HeaderBar from '../components/HeaderBar'
 import { Account } from '../entities/Account'
+import AppContext from '../context/AppContext'
 
 interface Props {
 }
@@ -15,6 +16,7 @@ const AddAccountsScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [balanceError, setBalanceError] = useState('')
     const navigation = useNavigation()
+    const {accounts, updateAccounts} = useContext(AppContext)
 
     const onAddItemPress = async () => {
         const accountRepository = await getRepository(Account, 'easy_track')
@@ -41,6 +43,7 @@ const AddAccountsScreen: React.FC<Props> = () => {
         account.balance = balance
         await accountRepository.save(account)
         console.log('Account saved')
+        await updateAccounts()
 
         navigation.navigate('Accounts')
     }

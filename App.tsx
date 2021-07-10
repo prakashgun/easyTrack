@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import 'react-native-gesture-handler'
 import { Connection, getRepository } from 'typeorm/browser'
 import Utils from './src/common/utils'
+import AppContext from './src/context/AppContext'
 import { Account } from './src/entities/Account'
 import AppNavContainer from './src/navigations/AppNavContainer'
 
@@ -13,9 +14,17 @@ interface Props {
 const App = (props: Props) => {
 
   const [connection, setConnection] = useState<Connection | null>(null)
+  const [accounts, setAccounts] = useState<Account[]>([])
+
+  const updateAccounts = async () => {
+    const accountRepository = await getRepository(Account, 'easy_track')
+    setAccounts(await accountRepository.find({ take: 5 }))
+}
 
   const setUpConnection = useCallback(async () => {
     setConnection(await Utils.createConnection())
+    await createDefaultAccounts()
+    await updateAccounts()
   }, [])
 
   const createDefaultAccounts = useCallback(async () => {
@@ -39,11 +48,14 @@ const App = (props: Props) => {
       setUpConnection()
     } else {
       createDefaultAccounts()
+      updateAccounts()
     }
   }, [])
 
   return (
-    <AppNavContainer />
+    <AppContext.Provider value={{accounts, updateAccounts}}>
+      <AppNavContainer />
+    </AppContext.Provider>
   )
 }
 
