@@ -21,7 +21,7 @@ export default class Utils {
             })
         } catch (error) {
             if (error === 'AlreadyHasActiveConnectionError') {
-                const existentConn = getConnectionManager().get("easy_track")
+                const existentConn = getConnectionManager().get(DB_CONNECTION_NAME)
                 return existentConn
             } else {
                 console.log('Db connection error', error)

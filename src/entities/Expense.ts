@@ -13,6 +13,11 @@ export class Expense {
     })
     name: string
 
+    @Column({
+        nullable: false
+    })
+    value: number
+
     @ManyToOne(type => Account, account => account.expenses, {
         onDelete: 'CASCADE'
     })
