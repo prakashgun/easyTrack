@@ -4,8 +4,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import HeaderBar from '../components/HeaderBar'
+import AccountContext from '../context/AccountContext'
 import { Account } from '../entities/Account'
-import AppContext from '../context/AppContext'
 
 interface Props {
 }
@@ -16,7 +16,7 @@ const AddAccountsScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [balanceError, setBalanceError] = useState('')
     const navigation = useNavigation()
-    const {accounts, updateAccounts} = useContext(AppContext)
+    const { accounts, updateAccounts } = useContext(AccountContext)
 
     const onAddItemPress = async () => {
         const accountRepository = await getRepository(Account, 'easy_track')
@@ -26,7 +26,7 @@ const AddAccountsScreen: React.FC<Props> = () => {
             return
         }
 
-        if(!balance){
+        if (!balance) {
             setBalanceError('Balance cannot be empty')
             return
         }

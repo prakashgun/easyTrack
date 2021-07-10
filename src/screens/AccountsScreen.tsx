@@ -1,13 +1,12 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
-import { useContext } from 'react'
-import { useCallback } from 'react'
+import React, { useContext, useState } from 'react'
+import { useEffect } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
-import { Connection, getRepository } from 'typeorm/browser'
-import Utils from '../common/utils'
+import { getRepository } from 'typeorm/browser'
 import HeaderBar from '../components/HeaderBar'
-import AppContext from '../context/AppContext'
+import AccountContext from '../context/AccountContext'
+import DbContext from '../context/DbContext'
 import { Account } from '../entities/Account'
 
 interface Props {
@@ -15,47 +14,17 @@ interface Props {
 
 const AccountsScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const {accounts, updateAccounts} = useContext(AppContext)
-    const [connection, setConnection] = useState<Connection | null>(null)
-
-    const list = [
-        {
-            name: 'Cash',
-            icon_name: 'bank',
-            icon_type: 'font-awesome',
-            amount: 10000
-        },
-        {
-            name: 'Axis Bank',
-            icon_name: 'bank',
-            icon_type: 'font-awesome',
-            amount: 125000
-        }
-    ]
-
-    const setUpConnection = useCallback(async () => {
-        setConnection(await Utils.createConnection())
-        await updateAccounts()
-    }, [])
-
+    const { accounts, updateAccounts } = useContext(AccountContext)
+    const { dbConnection, setUpConnection } = useContext(DbContext)
+    const [balance, setBalance] = useState<Number>(0)
 
     useEffect(() => {
-        if (!connection) {
-            console.log('setting up connection again')
+        if (!dbConnection) {
             setUpConnection()
         } else {
-            console.log('Calling getAccounts')
-            updateAccounts()
+            updateBalance()
         }
-    }, [])
-
-    // useEffect(() => {
-    //     const unsubscribe = navigation.addListener('focus', async () => {
-    //         //Screen is focused
-    //             console.log('Calling getAccounts')
-    //             getAccounts()
-    //     })
-    // }, [navigation])
+    }, [accounts])
 
     const deleteAccount = async (account: Account) => {
         console.log('Account to be deleted', account)
@@ -63,6 +32,17 @@ const AccountsScreen: React.FC<Props> = () => {
         await accountRepository.remove(account)
         console.log('Account deleted')
         await updateAccounts()
+        await updateBalance()
+    }
+
+    const updateBalance = async () => {
+        console.log('Finding account total')
+        const { sum } = await getRepository(Account, 'easy_track')
+            .createQueryBuilder('accounts')
+            .select('sum(accounts.balance)', 'sum')
+            .getRawOne()
+
+        setBalance(sum)
     }
 
     const onDeletePress = (account: Account) => {
@@ -119,7 +99,7 @@ const AccountsScreen: React.FC<Props> = () => {
                     <ListItem.Title>Balance</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Content right={true}>
-                    <Text>1780000</Text>
+                    <Text>{balance}</Text>
                 </ListItem.Content>
             </ListItem>
             <Button

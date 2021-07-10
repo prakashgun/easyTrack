@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import 'react-native-gesture-handler'
 import { Connection, getRepository } from 'typeorm/browser'
 import Utils from './src/common/utils'
-import AppContext from './src/context/AppContext'
+import AccountContext from './src/context/AccountContext'
+import DbContext from './src/context/DbContext'
 import { Account } from './src/entities/Account'
 import AppNavContainer from './src/navigations/AppNavContainer'
 
@@ -13,16 +14,16 @@ interface Props {
 
 const App = (props: Props) => {
 
-  const [connection, setConnection] = useState<Connection | null>(null)
+  const [dbConnection, setDbConnection] = useState<Connection | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
 
   const updateAccounts = async () => {
     const accountRepository = await getRepository(Account, 'easy_track')
     setAccounts(await accountRepository.find({ take: 5 }))
-}
+  }
 
   const setUpConnection = useCallback(async () => {
-    setConnection(await Utils.createConnection())
+    setDbConnection(await Utils.createConnection())
     await createDefaultAccounts()
     await updateAccounts()
   }, [])
@@ -44,7 +45,7 @@ const App = (props: Props) => {
   }, [])
 
   useEffect(() => {
-    if (!connection) {
+    if (!dbConnection) {
       setUpConnection()
     } else {
       createDefaultAccounts()
@@ -53,9 +54,11 @@ const App = (props: Props) => {
   }, [])
 
   return (
-    <AppContext.Provider value={{accounts, updateAccounts}}>
-      <AppNavContainer />
-    </AppContext.Provider>
+    <DbContext.Provider value={{ dbConnection, setUpConnection }}>
+      <AccountContext.Provider value={{ accounts, updateAccounts }}>
+        <AppNavContainer />
+      </AccountContext.Provider>
+    </DbContext.Provider>
   )
 }
 
