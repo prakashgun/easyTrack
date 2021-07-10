@@ -20,10 +20,10 @@ const ExpensesScreen: React.FC<Props> = () => {
     const {expenses, updateExpenses} = useContext(ExpenseContext)
 
     useEffect(() => {
-        if (!dbConnection) {
-            setUpConnection()
-        } else {
+        if (dbConnection) {
             updateBalance()
+        }else{
+            console.log('No db connection on expense screen')
         }
     }, [expenses])
 
@@ -84,7 +84,7 @@ const ExpensesScreen: React.FC<Props> = () => {
                                 onPress={() => onDeletePress(expense)} />
                         }
                     >
-                        <Icon name="bank" type="font-awesome" />
+                        <Icon name="fastfood" />
                         <ListItem.Content>
                             <ListItem.Title>{expense.name}</ListItem.Title>
                         </ListItem.Content>
@@ -95,7 +95,7 @@ const ExpensesScreen: React.FC<Props> = () => {
                 ))
             }
             <ListItem>
-                <Icon name="expense-balance-wallet" type="material-icons" />
+                <Icon name="account-balance-wallet" type="material-icons" />
                 <ListItem.Content>
                     <ListItem.Title>Balance</ListItem.Title>
                 </ListItem.Content>

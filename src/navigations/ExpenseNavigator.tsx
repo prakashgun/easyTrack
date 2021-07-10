@@ -21,11 +21,10 @@ export default function ExpenseNavigator() {
       }
     
     useEffect(()=>{
-        if(!dbConnection){
-            setUpConnection()
+        if(dbConnection){
             updateExpenses()
         }else{
-
+            console.log('No db connection on expense navigator')
         }
     },[])
 
