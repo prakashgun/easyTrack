@@ -56,14 +56,17 @@ const AccountsScreen: React.FC<Props> = () => {
     // useEffect(() => {
     //     const unsubscribe = navigation.addListener('focus', async () => {
     //         //Screen is focused
-    //         const accountRepository = await getRepository(Account, 'easy_track')
-    //         setAccounts(await accountRepository.find({ take: 100 }))
-    //         console.log('Account is ', accounts)
+    //             console.log('Calling getAccounts')
+    //             getAccounts()
     //     })
     // }, [navigation])
 
-    const onDeletePress = () => {
-        console.log('Delete pressed')
+    const onDeletePress = async (account: Account) => {
+        console.log('Account to be deleted', account)
+        const accountRepository = await getRepository(Account, 'easy_track')
+        await accountRepository.remove(account)
+        console.log('Account deleted')
+        getAccounts()
     }
 
     const onAddItemPress = () => {
@@ -83,7 +86,7 @@ const AccountsScreen: React.FC<Props> = () => {
                                 title="Delete"
                                 icon={{ name: 'delete', color: 'white' }}
                                 buttonStyle={styles.deleteButton}
-                                onPress={onDeletePress} />
+                                onPress={() => onDeletePress(l)} />
                         }
                     >
                         <Icon name="bank" type="font-awesome" />
