@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import 'react-native-gesture-handler'
 import { Connection, getRepository } from 'typeorm/browser'
-import Utils from './src/common/utils'
+import Utils, {DB_CONNECTION_NAME} from './src/common/Utils'
 import AccountContext from './src/context/AccountContext'
 import DbContext from './src/context/DbContext'
 import { Account } from './src/entities/Account'
@@ -18,7 +18,7 @@ const App = (props: Props) => {
   const [accounts, setAccounts] = useState<Account[]>([])
 
   const updateAccounts = async () => {
-    const accountRepository = await getRepository(Account, 'easy_track')
+    const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
     setAccounts(await accountRepository.find({ take: 5 }))
   }
 
@@ -30,7 +30,7 @@ const App = (props: Props) => {
 
   const createDefaultAccounts = useCallback(async () => {
 
-    const accountRepository = await getRepository(Account, 'easy_track')
+    const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
 
     const accountsCount = await accountRepository.count()
 

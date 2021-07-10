@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
 import AccountContext from '../context/AccountContext'
 import DbContext from '../context/DbContext'
@@ -28,7 +29,7 @@ const AccountsScreen: React.FC<Props> = () => {
 
     const deleteAccount = async (account: Account) => {
         console.log('Account to be deleted', account)
-        const accountRepository = await getRepository(Account, 'easy_track')
+        const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
         await accountRepository.remove(account)
         console.log('Account deleted')
         await updateAccounts()
@@ -37,7 +38,7 @@ const AccountsScreen: React.FC<Props> = () => {
 
     const updateBalance = async () => {
         console.log('Finding account total')
-        const { sum } = await getRepository(Account, 'easy_track')
+        const { sum } = await getRepository(Account, DB_CONNECTION_NAME)
             .createQueryBuilder('accounts')
             .select('sum(accounts.balance)', 'sum')
             .getRawOne()
@@ -71,7 +72,7 @@ const AccountsScreen: React.FC<Props> = () => {
         <View>
             <HeaderBar title="Accounts" />
             {
-                accounts.map((l, i) => (
+                accounts.map((account, i) => (
                     <ListItem.Swipeable
                         key={i}
                         bottomDivider
@@ -80,15 +81,15 @@ const AccountsScreen: React.FC<Props> = () => {
                                 title="Delete"
                                 icon={{ name: 'delete', color: 'white' }}
                                 buttonStyle={styles.deleteButton}
-                                onPress={() => onDeletePress(l)} />
+                                onPress={() => onDeletePress(account)} />
                         }
                     >
                         <Icon name="bank" type="font-awesome" />
                         <ListItem.Content>
-                            <ListItem.Title>{l.name}</ListItem.Title>
+                            <ListItem.Title>{account.name}</ListItem.Title>
                         </ListItem.Content>
                         <ListItem.Content right={true}>
-                            <ListItem.Title>{l.balance}</ListItem.Title>
+                            <ListItem.Title>{account.balance}</ListItem.Title>
                         </ListItem.Content>
                     </ListItem.Swipeable>
                 ))

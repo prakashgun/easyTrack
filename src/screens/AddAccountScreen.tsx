@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
 import AccountContext from '../context/AccountContext'
 import { Account } from '../entities/Account'
@@ -19,7 +20,7 @@ const AddAccountsScreen: React.FC<Props> = () => {
     const { accounts, updateAccounts } = useContext(AccountContext)
 
     const onAddItemPress = async () => {
-        const accountRepository = await getRepository(Account, 'easy_track')
+        const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
 
         if (name.length < 2) {
             setNameError('Name should be atleast two characters')
