@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { useContext } from 'react'
 import { useCallback } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { Connection, getRepository } from 'typeorm/browser'
 import Utils from '../common/utils'
@@ -57,12 +57,30 @@ const AccountsScreen: React.FC<Props> = () => {
     //     })
     // }, [navigation])
 
-    const onDeletePress = async (account: Account) => {
+    const deleteAccount = async (account: Account) => {
         console.log('Account to be deleted', account)
         const accountRepository = await getRepository(Account, 'easy_track')
         await accountRepository.remove(account)
         console.log('Account deleted')
         await updateAccounts()
+    }
+
+    const onDeletePress = (account: Account) => {
+        Alert.alert(
+            'Delete account ?',
+            'Delete account name ?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: () => deleteAccount(account)
+                }
+            ]
+        )
     }
 
     const onAddItemPress = () => {
