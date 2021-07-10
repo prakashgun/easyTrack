@@ -1,17 +1,20 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import { ListItem, Button, Icon } from 'react-native-elements'
-import { getRepository } from 'typeorm/browser'
+import { useCallback } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Button, Icon, ListItem } from 'react-native-elements'
+import { Connection, getRepository } from 'typeorm/browser'
 import Utils from '../common/utils'
 import HeaderBar from '../components/HeaderBar'
 import { Account } from '../entities/Account'
-import { Category } from '../entities/Category'
 
+interface Props {
+}
 
-export default function AccountsScreen() {
+const AccountsScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const [accounts, setAccounts] = useState([])
+    const [accounts, setAccounts] = useState<Account[]>([])
+    const [connection, setConnection] = useState<Connection | null>(null)
 
     const list = [
         {
@@ -28,42 +31,36 @@ export default function AccountsScreen() {
         }
     ]
 
-    const createAccounts = async () => {
-        await Utils.createConnection()
-
-        const accountRepository = getRepository(Account)
-
-        const accountsCount = await accountRepository.count()
-
-        if (accountsCount === 0) {
-            const account1 = new Account()
-            account1.name = 'Cash'
-            account1.balance = 0
-            await accountRepository.save(account1)
-
-            console.log('Default accounts saved')
-        }
-
-        const accounts = await accountRepository.find({ take: 5 })
-
-        console.log('Accounts', accounts)
-        setAccounts(accounts)
-
+    const getAccounts = async () => {
+        console.log('Calling setAccounts')
+        const accountRepository = await getRepository(Account, 'easy_track')
+        setAccounts(await accountRepository.find({ take: 5 }))
     }
 
-    useEffect(() => {
-        //First loading
-        createAccounts()
+    const setUpConnection = useCallback(async () => {
+        setConnection(await Utils.createConnection())
+        await getAccounts()
     }, [])
 
-    useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', async ()=>{
-            //Screen is focused
-            const accountRepository = getRepository(Account)
-            const accounts = await accountRepository.find({ take: 5 })
-            setAccounts(accounts)
-        })        
-    }, [navigation])
+
+    useEffect(() => {
+        if (!connection) {
+            console.log('setting up connection again')
+            setUpConnection()
+        } else {
+            console.log('Calling getAccounts')
+            getAccounts()
+        }
+    }, [])
+
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', async () => {
+    //         //Screen is focused
+    //         const accountRepository = await getRepository(Account, 'easy_track')
+    //         setAccounts(await accountRepository.find({ take: 100 }))
+    //         console.log('Account is ', accounts)
+    //     })
+    // }, [navigation])
 
     const onDeletePress = () => {
         console.log('Delete pressed')
@@ -129,3 +126,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'red'
     }
 })
+
+export default AccountsScreen

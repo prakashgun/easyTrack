@@ -6,19 +6,26 @@ import { getRepository } from 'typeorm/browser'
 import HeaderBar from '../components/HeaderBar'
 import { Account } from '../entities/Account'
 
-export default function AddAccountScreen() {
+interface Props {
+}
 
+const AddAccountsScreen: React.FC<Props> = () => {
     const [name, setName] = useState('')
-    const [balance, setBalance] = useState(0)
+    const [balance, setBalance] = useState(null)
     const [nameError, setNameError] = useState('')
     const [balanceError, setBalanceError] = useState('')
     const navigation = useNavigation()
 
     const onAddItemPress = async () => {
-        const accountRepository = getRepository(Account)
+        const accountRepository = await getRepository(Account, 'easy_track')
 
         if (name.length < 2) {
             setNameError('Name should be atleast two characters')
+            return
+        }
+
+        if(!balance){
+            setBalanceError('Balance cannot be empty')
             return
         }
 
@@ -35,7 +42,7 @@ export default function AddAccountScreen() {
         await accountRepository.save(account)
         console.log('Account saved')
 
-        navigation.push('Accounts')
+        navigation.navigate('Accounts')
     }
 
     return (
@@ -73,3 +80,5 @@ export default function AddAccountScreen() {
 }
 
 const styles = StyleSheet.create({})
+
+export default AddAccountsScreen
