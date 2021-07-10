@@ -5,69 +5,69 @@ import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
-import ExpenseContext from '../context/ExpenseContext'
-import { Expense } from '../entities/Expense'
+import CategoryContext from '../context/CategoryContext'
+import { Category } from '../entities/Category'
 
 interface Props {
 }
 
-const AddExpenseScreen: React.FC<Props> = () => {
+const AddCategoryScreen: React.FC<Props> = () => {
     const [name, setName] = useState('')
-    const [value, setValue] = useState(null)
+    const [icon, setIcon] = useState(null)
     const [nameError, setNameError] = useState('')
-    const [valueError, setValueError] = useState('')
+    const [iconError, setIconError] = useState('')
     const navigation = useNavigation()
-    const { expenses, updateExpenses } = useContext(ExpenseContext)
+    const { categories, updateCategories } = useContext(CategoryContext)
 
     const onAddItemPress = async () => {
-        const expenseRepository = await getRepository(Expense, DB_CONNECTION_NAME)
+        const categoryRepository = await getRepository(Category, DB_CONNECTION_NAME)
 
         if (name.length < 2) {
             setNameError('Name should be atleast two characters')
             return
         }
 
-        if (!value) {
-            setValueError('Value cannot be empty')
+        if (!icon) {
+            setIconError('Icon cannot be empty')
             return
         }
 
-        const expensesCount = await expenseRepository.count({ where: { name: name } })
+        const categoriesCount = await categoryRepository.count({ where: { name: name } })
 
-        if (expensesCount > 0) {
+        if (categoriesCount > 0) {
             setNameError('Name already exists')
             return
         }
 
-        const expense = new Expense()
-        expense.name = name
-        expense.value = value
-        await expenseRepository.save(expense)
-        console.log('Expense saved')
-        await updateExpenses()
+        const category = new Category()
+        category.name = name
+        category.icon = icon
+        await categoryRepository.save(category)
+        console.log('Category saved')
+        await updateCategories()
 
-        navigation.navigate('Expenses')
+        navigation.navigate('Categories')
     }
 
     return (
         <View>
-            <HeaderBar title="Add Expense" />
+            <HeaderBar title="Add Category" />
             <Input
-                placeholder="Expense Name"
-                leftIcon={{ type: 'entypo', name: 'price-tag' }}
+                placeholder="Category Name"
+                leftIcon={{ type: 'font-awesome', name: 'bank' }}
                 style={styles}
                 onChangeText={setName}
                 defaultValue={name}
             />
             {!!nameError && <Text style={{ color: 'red' }}>{nameError}</Text>}
             <Input
-                placeholder="Value"
-                leftIcon={{ type: 'font-awesome', name: 'money' }}
+                placeholder="Icon"
+                leftIcon={{ type: 'material-icons', name: 'category-icon-wallet' }}
                 style={styles}
                 keyboardType="numeric"
-                onChangeText={setValue}
+                onChangeText={setIcon}
             />
-            {!!valueError && <Text style={{ color: 'red' }}>{valueError}</Text>}
+            {!!iconError && <Text style={{ color: 'red' }}>{iconError}</Text>}
             <Button
                 icon={
                     <Icon
@@ -85,4 +85,4 @@ const AddExpenseScreen: React.FC<Props> = () => {
 
 const styles = StyleSheet.create({})
 
-export default AddExpenseScreen
+export default AddCategoryScreen

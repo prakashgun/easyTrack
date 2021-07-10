@@ -11,7 +11,7 @@ import { Account } from '../entities/Account'
 interface Props {
 }
 
-const AddAccountsScreen: React.FC<Props> = () => {
+const AddAccountScreen: React.FC<Props> = () => {
     const [name, setName] = useState('')
     const [balance, setBalance] = useState(null)
     const [nameError, setNameError] = useState('')
@@ -85,4 +85,4 @@ const AddAccountsScreen: React.FC<Props> = () => {
 
 const styles = StyleSheet.create({})
 
-export default AddAccountsScreen
+export default AddAccountScreen
