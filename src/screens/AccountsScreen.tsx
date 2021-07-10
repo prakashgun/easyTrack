@@ -21,7 +21,7 @@ const AccountsScreen: React.FC<Props> = () => {
 
     useEffect(() => {
         if (!dbConnection) {
-            setUpConnection()
+            // setUpConnection()
         } else {
             updateBalance()
         }
