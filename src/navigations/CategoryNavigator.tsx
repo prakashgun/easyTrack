@@ -32,11 +32,11 @@ export default function CategoryNavigator() {
             const defaultCategories = [
                 {
                     name: 'Food',
-                    icon: 'food'
+                    icon: 'fastfood'
                 },
                 {
                     name: 'Clothing',
-                    icon: 'tshirt'
+                    icon: 'directions-walk'
                 },
                 {
                     name: 'Transportation',
@@ -64,7 +64,7 @@ export default function CategoryNavigator() {
                 },
                 {
                     name: 'Medical',
-                    icon: 'medical-bag'
+                    icon: 'medical-services'
                 },
                 {
                     name: 'Others',

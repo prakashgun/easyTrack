@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
 import { useEffect } from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
@@ -52,6 +52,7 @@ const CategoriesScreen: React.FC<Props> = () => {
     return (
         <View>
             <HeaderBar title="Categories" />
+            <ScrollView>
             {
                 categories.map((category, i) => (
                     <ListItem.Swipeable
@@ -72,6 +73,7 @@ const CategoriesScreen: React.FC<Props> = () => {
                     </ListItem.Swipeable>
                 ))
             }
+            </ScrollView>
             <Button
                 icon={
                     <Icon
