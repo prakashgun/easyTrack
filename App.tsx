@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { LogBox } from 'react-native'
 import 'react-native-gesture-handler'
 import { Connection, getRepository } from 'typeorm/browser'
-import Utils, {DB_CONNECTION_NAME} from './src/common/Utils'
+import Utils, { DB_CONNECTION_NAME } from './src/common/Utils'
 import AccountContext from './src/context/AccountContext'
 import DbContext from './src/context/DbContext'
 import { Account } from './src/entities/Account'
 import AppNavContainer from './src/navigations/AppNavContainer'
+
+LogBox.ignoreLogs(['Reanimated 2'])
 
 
 interface Props {

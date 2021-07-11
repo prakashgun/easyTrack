@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { Button, Icon, Input, ListItem } from 'react-native-elements'
+import { Button, Icon, Input, ListItem, Card } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
@@ -13,7 +13,10 @@ interface Props {
 
 const AddCategoryScreen: React.FC<Props> = () => {
     const [name, setName] = useState('')
-    const [icon, setIcon] = useState(null)
+    const [icon, setIcon] = useState({
+        icon_name: 'category',
+        icon_type: 'material-icons'
+    })
     const [nameError, setNameError] = useState('')
     const [iconError, setIconError] = useState('')
     const navigation = useNavigation()
@@ -67,18 +70,17 @@ const AddCategoryScreen: React.FC<Props> = () => {
         { icon_name: 'clipboard', icon_type: 'entypo' },
         { icon_name: 'colours', icon_type: 'entypo' },
 
-        
+
     ]
 
     const onIconPress = (icon) => {
         console.log('icon pressed: ', icon)
+        setIcon(icon)
     }
 
 
     const onAddItemPress = async () => {
         const categoryRepository = await getRepository(Category, DB_CONNECTION_NAME)
-
-
 
         if (name.length < 2) {
             setNameError('Name should be atleast two characters')
@@ -99,7 +101,8 @@ const AddCategoryScreen: React.FC<Props> = () => {
 
         const category = new Category()
         category.name = name
-        category.icon_name = icon
+        category.icon_name = icon.icon_name
+        category.icon_type = icon.icon_type
         await categoryRepository.save(category)
         console.log('Category saved')
         await updateCategories()
@@ -112,7 +115,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
             <HeaderBar title="Add Category" />
             <Input
                 placeholder="Category Name"
-                leftIcon={{ type: 'material-icons', name: 'category' }}
+                leftIcon={{ type: icon.icon_type, name: icon.icon_name }}
                 style={styles}
                 onChangeText={setName}
                 defaultValue={name}
@@ -123,7 +126,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
                     <>
                         <Icon type="font-awesome" name="fonticons" />
                         <ListItem.Content>
-                            <ListItem.Title>Icon</ListItem.Title>
+                            <ListItem.Title> Choose Icon</ListItem.Title>
                         </ListItem.Content>
                     </>
                 }
