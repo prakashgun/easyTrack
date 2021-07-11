@@ -66,7 +66,7 @@ const CategoriesScreen: React.FC<Props> = () => {
                                 onPress={() => onDeletePress(category)} />
                         }
                     >
-                        <Icon name={category.icon} />
+                        <Icon name={category.icon_name} type={category.icon_type} />
                         <ListItem.Content>
                             <ListItem.Title>{category.name}</ListItem.Title>
                         </ListItem.Content>

@@ -32,43 +32,53 @@ export default function CategoryNavigator() {
             const defaultCategories = [
                 {
                     name: 'Food',
-                    icon: 'fastfood'
+                    icon_name: 'fastfood',
+                    icon_type: 'material-icons'
                 },
                 {
                     name: 'Clothing',
-                    icon: 'directions-walk'
+                    icon_name: 'tshirt',
+                    icon_type: 'font-awesome-5'
                 },
                 {
                     name: 'Transportation',
-                    icon: 'emoji-transportation'
+                    icon_name: 'car',
+                    icon_type: 'font-awesome'
                 },
                 {
                     name: 'Education',
-                    icon: 'book'
+                    icon_name: 'graduation-cap',
+                    icon_type: 'font-awesome'
                 },
                 {
                     name: 'Entertainment',
-                    icon: 'movie'
+                    icon_name: 'movie',
+                    icon_type: 'material-icons'
                 },
                 {
                     name: 'Social',
-                    icon: 'people'
+                    icon_name: 'group',
+                    icon_type: 'font-awesome'
                 },
                 {
                     name: 'Investment',
-                    icon: 'business'
+                    icon_name: 'bar-graph',
+                    icon_type: 'entypo'
                 },
                 {
                     name: 'Health',
-                    icon: 'fitness-center'
+                    icon_name: 'fitness-center',
+                    icon_type: 'material-icons'
                 },
                 {
                     name: 'Medical',
-                    icon: 'medical-services'
+                    icon_name: 'medical-services',
+                    icon_type: 'material-icons'
                 },
                 {
                     name: 'Others',
-                    icon: 'miscellaneous-services'
+                    icon_name: 'miscellaneous-services',
+                    icon_type: 'material-icons'
                 }
             ]
 
@@ -87,6 +97,8 @@ export default function CategoryNavigator() {
         if (dbConnection) {
             createDefaultCategories()
             updateCategories()
+            console.log('categories:')
+            console.log(categories)
         } else {
             console.log('No db connection on category navigator')
         }

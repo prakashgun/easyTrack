@@ -7,13 +7,22 @@ export class Category{
     id: number
 
     @Column({
-        unique: true,
-        length: 50
+        nullable: false,
+        length: 100
     })
     name: string
 
-    @Column()
-    icon: string
+    @Column({
+        nullable: false,
+        length: 100
+    })
+    icon_name: string
+
+    @Column({
+        nullable: false,
+        length: 100
+    })
+    icon_type: string
 
     @OneToMany(type=>Expense, expense => expense.category)
     expenses: Expense[]
