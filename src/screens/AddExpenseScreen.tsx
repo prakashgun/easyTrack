@@ -1,11 +1,16 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, Icon, Input } from 'react-native-elements'
+import { useEffect } from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Button, Icon, Input,ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
+import AccountContext from '../context/AccountContext'
+import CategoryContext from '../context/CategoryContext'
 import ExpenseContext from '../context/ExpenseContext'
+import { Account } from '../entities/Account'
+import { Category } from '../entities/Category'
 import { Expense } from '../entities/Expense'
 
 interface Props {
@@ -16,8 +21,34 @@ const AddExpenseScreen: React.FC<Props> = () => {
     const [value, setValue] = useState(null)
     const [nameError, setNameError] = useState('')
     const [valueError, setValueError] = useState('')
+    const [category, setCategory] = useState<Category|null>(null)
+    const {categories, updateCategories, defaultCategory} = useContext(CategoryContext)
+    const {accounts, updateAccounts, defaultAccount} = useContext(AccountContext)
+    const [account, setAccount] = useState<Account|null>(null)
+    const [categoryName, setCategoryName] = useState(null)
+    const [categoryNameError, setCategoryNameError] = useState(null)
     const navigation = useNavigation()
     const { expenses, updateExpenses } = useContext(ExpenseContext)
+    const [categoryExpanded, setCategoryExpanded] = useState(false)
+    const [accountExpanded, setAccountExpanded] = useState(false)
+
+    const onCategoryIconPress = (category) => {
+        console.log('category icon pressed: ', category)
+        setCategory(category)
+        setCategoryExpanded(!categoryExpanded)
+    }
+
+    const onAccountIconPress = (account) => {
+        console.log('account icon pressed: ', account)
+        setAccount(account)
+        setAccountExpanded(!accountExpanded)
+    }
+
+    useEffect(()=>{
+        console.log('default category is',defaultCategory)
+        setCategory(defaultCategory)    
+        setAccount(defaultAccount)
+    },[])
 
     const onAddItemPress = async () => {
         const expenseRepository = await getRepository(Expense, DB_CONNECTION_NAME)
@@ -60,6 +91,60 @@ const AddExpenseScreen: React.FC<Props> = () => {
                 defaultValue={name}
             />
             {!!nameError && <Text style={{ color: 'red' }}>{nameError}</Text>}
+            <ListItem.Accordion
+                content={
+                    <>
+                        <Icon type={defaultCategory.icon_type} name={defaultCategory.icon_name} />
+                        <ListItem.Content>
+                            <ListItem.Title>{category.name}</ListItem.Title>
+                        </ListItem.Content>
+                    </>
+                }
+                isExpanded={categoryExpanded}
+                onPress={() => {
+                    setCategoryExpanded(!categoryExpanded)
+                }}
+                bottomDivider
+            >
+                <ScrollView>
+                    {categories && categories.map((category, i) => (
+                        <ListItem key={i} onPress={() => onCategoryIconPress(category)} bottomDivider>
+                            <Icon name={category.icon_name} type={category.icon_type} />
+                            <ListItem.Content>
+                                <ListItem.Title>{category.name}</ListItem.Title>
+                            </ListItem.Content>
+                        </ListItem>
+                    ))}
+                </ScrollView>
+            </ListItem.Accordion>
+
+            <ListItem.Accordion
+                content={
+                    <>
+                        <Icon name="bank" />
+                        <ListItem.Content>
+                            <ListItem.Title>{account.name}</ListItem.Title>
+                        </ListItem.Content>
+                    </>
+                }
+                isExpanded={accountExpanded}
+                onPress={() => {
+                    setAccountExpanded(!accountExpanded)
+                }}
+                bottomDivider
+            >
+                <ScrollView>
+                    {accounts && accounts.map((account, i) => (
+                        <ListItem key={i} onPress={() => onAccountIconPress(account)} bottomDivider>
+                            <Icon name="bank" />
+                            <ListItem.Content>
+                                <ListItem.Title>{account.name}</ListItem.Title>
+                            </ListItem.Content>
+                        </ListItem>
+                    ))}
+                </ScrollView>
+            </ListItem.Accordion>
+
             <Input
                 placeholder="Value"
                 leftIcon={{ type: 'font-awesome', name: 'money' }}

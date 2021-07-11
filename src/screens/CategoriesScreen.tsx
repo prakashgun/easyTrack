@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
-import { useEffect } from 'react'
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
@@ -50,29 +49,29 @@ const CategoriesScreen: React.FC<Props> = () => {
     }
 
     return (
-        <View>
+        <View style={styles.container}>
             <HeaderBar title="Categories" />
             <ScrollView>
-            {
-                categories.map((category, i) => (
-                    <ListItem.Swipeable
-                        key={i}
-                        bottomDivider
-                        rightContent={
-                            <Button
-                                title="Delete"
-                                icon={{ name: 'delete', color: 'white' }}
-                                buttonStyle={styles.deleteButton}
-                                onPress={() => onDeletePress(category)} />
-                        }
-                    >
-                        <Icon name={category.icon_name} type={category.icon_type} />
-                        <ListItem.Content>
-                            <ListItem.Title>{category.name}</ListItem.Title>
-                        </ListItem.Content>
-                    </ListItem.Swipeable>
-                ))
-            }
+                {
+                    categories.map((category, i) => (
+                        <ListItem.Swipeable
+                            key={i}
+                            bottomDivider
+                            rightContent={
+                                <Button
+                                    title="Delete"
+                                    icon={{ name: 'delete', color: 'white' }}
+                                    buttonStyle={styles.deleteButton}
+                                    onPress={() => onDeletePress(category)} />
+                            }
+                        >
+                            <Icon name={category.icon_name} type={category.icon_type} />
+                            <ListItem.Content>
+                                <ListItem.Title>{category.name}</ListItem.Title>
+                            </ListItem.Content>
+                        </ListItem.Swipeable>
+                    ))
+                }
             </ScrollView>
             <Button
                 icon={
@@ -90,6 +89,9 @@ const CategoriesScreen: React.FC<Props> = () => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
     deleteButton: {
         minHeight: '100%',
         backgroundColor: 'red'
