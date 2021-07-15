@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
-import { useEffect } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { Button, Icon, Input,ListItem } from 'react-native-elements'
+import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
@@ -21,34 +20,26 @@ const AddExpenseScreen: React.FC<Props> = () => {
     const [value, setValue] = useState(null)
     const [nameError, setNameError] = useState('')
     const [valueError, setValueError] = useState('')
-    const [category, setCategory] = useState<Category|null>(null)
-    const {categories, updateCategories, defaultCategory} = useContext(CategoryContext)
-    const {accounts, updateAccounts, defaultAccount} = useContext(AccountContext)
-    const [account, setAccount] = useState<Account|null>(null)
-    const [categoryName, setCategoryName] = useState(null)
-    const [categoryNameError, setCategoryNameError] = useState(null)
+    const { categories, updateCategories } = useContext(CategoryContext)
+    const { accounts, updateAccounts } = useContext(AccountContext)
     const navigation = useNavigation()
     const { expenses, updateExpenses } = useContext(ExpenseContext)
     const [categoryExpanded, setCategoryExpanded] = useState(false)
     const [accountExpanded, setAccountExpanded] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState<Category>()
+    const [selectedAccount, setSelectedAccount] = useState<Account>()
 
     const onCategoryIconPress = (category) => {
         console.log('category icon pressed: ', category)
-        setCategory(category)
+        setSelectedCategory(category)
         setCategoryExpanded(!categoryExpanded)
     }
 
     const onAccountIconPress = (account) => {
         console.log('account icon pressed: ', account)
-        setAccount(account)
+        setSelectedAccount(account)
         setAccountExpanded(!accountExpanded)
     }
-
-    useEffect(()=>{
-        console.log('default category is',defaultCategory)
-        setCategory(defaultCategory)    
-        setAccount(defaultAccount)
-    },[])
 
     const onAddItemPress = async () => {
         const expenseRepository = await getRepository(Expense, DB_CONNECTION_NAME)
@@ -91,12 +82,15 @@ const AddExpenseScreen: React.FC<Props> = () => {
                 defaultValue={name}
             />
             {!!nameError && <Text style={{ color: 'red' }}>{nameError}</Text>}
-            <ListItem.Accordion
+            {categories && <ListItem.Accordion
                 content={
                     <>
-                        <Icon type={defaultCategory.icon_type} name={defaultCategory.icon_name} />
+                        <Icon
+                            type={selectedCategory ? selectedCategory.icon_type : categories[0].icon_type}
+                            name={selectedCategory ? selectedCategory.icon_name : categories[0].icon_name}
+                        />
                         <ListItem.Content>
-                            <ListItem.Title>{category.name}</ListItem.Title>
+                            <ListItem.Title>{selectedCategory ? selectedCategory.name : categories[0].name}</ListItem.Title>
                         </ListItem.Content>
                     </>
                 }
@@ -116,14 +110,14 @@ const AddExpenseScreen: React.FC<Props> = () => {
                         </ListItem>
                     ))}
                 </ScrollView>
-            </ListItem.Accordion>
+            </ListItem.Accordion>}
 
-            <ListItem.Accordion
+            {accounts && <ListItem.Accordion
                 content={
                     <>
-                        <Icon name="bank" />
+                        <Icon name="bank" type="font-awesome" />
                         <ListItem.Content>
-                            <ListItem.Title>{account.name}</ListItem.Title>
+                            <ListItem.Title>{selectedAccount ? selectedAccount.name : accounts[0].name}</ListItem.Title>
                         </ListItem.Content>
                     </>
                 }
@@ -136,14 +130,14 @@ const AddExpenseScreen: React.FC<Props> = () => {
                 <ScrollView>
                     {accounts && accounts.map((account, i) => (
                         <ListItem key={i} onPress={() => onAccountIconPress(account)} bottomDivider>
-                            <Icon name="bank" />
+                            <Icon name="bank" type="font-awesome" />
                             <ListItem.Content>
                                 <ListItem.Title>{account.name}</ListItem.Title>
                             </ListItem.Content>
                         </ListItem>
                     ))}
                 </ScrollView>
-            </ListItem.Accordion>
+            </ListItem.Accordion>}
 
             <Input
                 placeholder="Value"
