@@ -38,6 +38,7 @@ const App = (props: Props) => {
     setDbConnection(await Utils.createConnection())
     await createDefaultAccounts()
     await updateAccounts()
+    await createDefaultCategories()
     await updateCategories()
   }, [])
 
