@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import createAccount from '../actions/accounts/createAccount'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
 import AccountContext from '../context/AccountContext'
@@ -17,7 +18,7 @@ const AddAccountScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [balanceError, setBalanceError] = useState('')
     const navigation = useNavigation()
-    const { accounts, getAccounts } = useContext(AccountContext)
+    const { accounts, accountsDispatch } = useContext(AccountContext)
 
     const onAddItemPress = async () => {
         const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
@@ -42,9 +43,7 @@ const AddAccountScreen: React.FC<Props> = () => {
         const account = new Account()
         account.name = name
         account.balance = balance
-        await accountRepository.save(account)
-        console.log('Account saved')
-        await getAccounts()
+        await createAccount(accountsDispatch, account)
 
         navigation.navigate('Accounts')
     }

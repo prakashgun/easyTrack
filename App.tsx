@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { LogBox } from 'react-native'
 import 'react-native-gesture-handler'
 import { Connection, getRepository } from 'typeorm/browser'
+import createDefaultAccounts from './src/actions/accounts/createDefaultAccounts'
 import Utils, { DB_CONNECTION_NAME } from './src/common/Utils'
 import AccountContext from './src/context/AccountContext'
 import CategoryContext from './src/context/CategoryContext'
 import DbContext from './src/context/DbContext'
-import { Account } from './src/entities/Account'
 import { Category } from './src/entities/Category'
 import AppNavContainer from './src/navigations/AppNavContainer'
+import AccountsReducer from './src/reducers/AccountsReducer'
 
 LogBox.ignoreLogs(['Reanimated 2'])
 
@@ -20,14 +21,8 @@ interface Props {
 const App = (props: Props) => {
 
   const [dbConnection, setDbConnection] = useState<Connection | null>(null)
-  const [accounts, setAccounts] = useState<Account[]>([])
+  const [accounts, accountsDispatch] = useReducer(AccountsReducer, [])
   const [categories, setCategories] = useState<Category[]>([])
-
-
-  const getAccounts = async () => {
-    const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
-    setAccounts(await accountRepository.find({ take: 10000 }))
-  }
 
   const getCategories = async () => {
     const categoryRepository = await getRepository(Category, DB_CONNECTION_NAME)
@@ -36,26 +31,9 @@ const App = (props: Props) => {
 
   const setUpConnection = useCallback(async () => {
     setDbConnection(await Utils.createConnection())
-    await createDefaultAccounts()
-    await getAccounts()
+    createDefaultAccounts(accountsDispatch)
     await createDefaultCategories()
     await getCategories()
-  }, [])
-
-  const createDefaultAccounts = useCallback(async () => {
-
-    const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
-
-    const accountsCount = await accountRepository.count()
-
-    if (accountsCount === 0) {
-      const account1 = new Account()
-      account1.name = 'Cash'
-      account1.balance = 0
-      await accountRepository.save(account1)
-
-      console.log('Default accounts saved')
-    }
   }, [])
 
   const createDefaultCategories = useCallback(async () => {
@@ -133,15 +111,14 @@ const App = (props: Props) => {
     if (!dbConnection) {
       setUpConnection()
     } else {
-      createDefaultAccounts()
-      getAccounts()
+      createDefaultAccounts(accountsDispatch)
       createDefaultCategories()
     }
   }, [])
 
   return (
     <DbContext.Provider value={{ dbConnection, setUpConnection }}>
-      <AccountContext.Provider value={{ accounts, getAccounts }}>
+      <AccountContext.Provider value={{ accounts, accountsDispatch }}>
         <CategoryContext.Provider value={{ categories, getCategories }}>
           <AppNavContainer />
         </CategoryContext.Provider>

@@ -15,7 +15,7 @@ interface Props {
 
 const AccountsScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const { accounts, getAccounts } = useContext(AccountContext)
+    const { accounts, accountsDispatch } = useContext(AccountContext)
     const { dbConnection, setUpConnection } = useContext(DbContext)
     const [balance, setBalance] = useState<Number>(0)
 
@@ -32,7 +32,6 @@ const AccountsScreen: React.FC<Props> = () => {
         const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
         await accountRepository.remove(account)
         console.log('Account deleted')
-        await getAccounts()
         await updateBalance()
     }
 
