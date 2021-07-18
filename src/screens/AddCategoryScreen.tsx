@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { Button, Icon, Input, ListItem, Card } from 'react-native-elements'
+import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
@@ -20,7 +20,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [iconError, setIconError] = useState('')
     const navigation = useNavigation()
-    const { categories, updateCategories } = useContext(CategoryContext)
+    const { categories, getCategories } = useContext(CategoryContext)
     const [expanded, setExpanded] = useState(false)
 
     const icons = [
@@ -105,7 +105,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
         category.icon_type = icon.icon_type
         await categoryRepository.save(category)
         console.log('Category saved')
-        await updateCategories()
+        await getCategories()
 
         navigation.navigate('Categories')
     }

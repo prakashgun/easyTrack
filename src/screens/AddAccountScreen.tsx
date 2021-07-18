@@ -17,7 +17,7 @@ const AddAccountScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [balanceError, setBalanceError] = useState('')
     const navigation = useNavigation()
-    const { accounts, updateAccounts } = useContext(AccountContext)
+    const { accounts, getAccounts } = useContext(AccountContext)
 
     const onAddItemPress = async () => {
         const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
@@ -44,7 +44,7 @@ const AddAccountScreen: React.FC<Props> = () => {
         account.balance = balance
         await accountRepository.save(account)
         console.log('Account saved')
-        await updateAccounts()
+        await getAccounts()
 
         navigation.navigate('Accounts')
     }

@@ -14,7 +14,7 @@ interface Props {
 
 const CategoriesScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const { categories, updateCategories } = useContext(CategoryContext)
+    const { categories, getCategories } = useContext(CategoryContext)
     const { dbConnection, setUpConnection } = useContext(DbContext)
     const [balance, setBalance] = useState<Number>(0)
 
@@ -23,7 +23,7 @@ const CategoriesScreen: React.FC<Props> = () => {
         const categoryRepository = await getRepository(Category, DB_CONNECTION_NAME)
         await categoryRepository.remove(category)
         console.log('Category deleted')
-        await updateCategories()
+        await getCategories()
     }
 
     const onDeletePress = (category: Category) => {
