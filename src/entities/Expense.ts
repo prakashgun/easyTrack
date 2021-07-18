@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm/browser"
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm/browser"
 import { Account } from "./Account"
 import { Category } from "./Category"
 
@@ -17,6 +17,12 @@ export class Expense {
         nullable: false
     })
     value: number
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 
     @ManyToOne(type => Account, account => account.expenses, {
         onDelete: 'CASCADE'
