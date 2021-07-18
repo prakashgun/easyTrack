@@ -3,10 +3,12 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import createCategory from '../actions/categories/createCategory'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
 import CategoryContext from '../context/CategoryContext'
 import { Category } from '../entities/Category'
+import CategoryReducer from '../reducers/CategoryReducer'
 
 interface Props {
 }
@@ -20,7 +22,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
     const [nameError, setNameError] = useState('')
     const [iconError, setIconError] = useState('')
     const navigation = useNavigation()
-    const { categories, getCategories } = useContext(CategoryContext)
+    const { categories, categoriesDispatch } = useContext(CategoryContext)
     const [expanded, setExpanded] = useState(false)
 
     const icons = [
@@ -69,8 +71,6 @@ const AddCategoryScreen: React.FC<Props> = () => {
         { icon_name: 'clapperboard', icon_type: 'entypo' },
         { icon_name: 'clipboard', icon_type: 'entypo' },
         { icon_name: 'colours', icon_type: 'entypo' },
-
-
     ]
 
     const onIconPress = (icon) => {
@@ -103,9 +103,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
         category.name = name
         category.icon_name = icon.icon_name
         category.icon_type = icon.icon_type
-        await categoryRepository.save(category)
-        console.log('Category saved')
-        await getCategories()
+        await createCategory(categoriesDispatch, category)
 
         navigation.navigate('Categories')
     }
