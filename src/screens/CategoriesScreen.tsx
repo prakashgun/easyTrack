@@ -1,12 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
-import { getRepository } from 'typeorm/browser'
-import { DB_CONNECTION_NAME } from '../common/Utils'
+import deleteCategory from '../actions/categories/deleteCategory'
 import HeaderBar from '../components/HeaderBar'
 import CategoryContext from '../context/CategoryContext'
-import DbContext from '../context/DbContext'
 import { Category } from '../entities/Category'
 
 interface Props {
@@ -14,16 +12,11 @@ interface Props {
 
 const CategoriesScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
-    const { categories, getCategories } = useContext(CategoryContext)
-    const { dbConnection, setUpConnection } = useContext(DbContext)
-    const [balance, setBalance] = useState<Number>(0)
+    const { categories, categoriesDispatch } = useContext(CategoryContext)
 
-    const deleteCategory = async (category: Category) => {
+    const removeCategory = async (category: Category) => {
         console.log('Category to be deleted', category)
-        const categoryRepository = await getRepository(Category, DB_CONNECTION_NAME)
-        await categoryRepository.remove(category)
-        console.log('Category deleted')
-        await getCategories()
+        await deleteCategory(categoriesDispatch, category)
     }
 
     const onDeletePress = (category: Category) => {
@@ -38,7 +31,7 @@ const CategoriesScreen: React.FC<Props> = () => {
                 },
                 {
                     text: 'OK',
-                    onPress: () => deleteCategory(category)
+                    onPress: () => removeCategory(category)
                 }
             ]
         )
