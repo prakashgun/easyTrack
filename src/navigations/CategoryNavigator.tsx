@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import AddCategoryScreen from '../screens/AddCategoryScreen'
-import CategoriesScreen from '../screens/CategoriesScreen'
+import AddCategoryScreen from '../screens/categories/AddCategoryScreen'
+import CategoriesScreen from '../screens/categories/CategoriesScreen'
 
 export default function CategoryNavigator() {
     const Stack = createStackNavigator()

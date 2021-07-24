@@ -3,12 +3,12 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import createCategory from '../actions/categories/createCategory'
-import { DB_CONNECTION_NAME } from '../common/Utils'
-import HeaderBar from '../components/HeaderBar'
-import CategoryContext from '../context/CategoryContext'
-import { Category } from '../entities/Category'
-import CategoryReducer from '../reducers/CategoryReducer'
+import createCategory from '../../actions/categories/createCategory'
+import { DB_CONNECTION_NAME } from '../../common/Utils'
+import HeaderBar from '../../components/HeaderBar'
+import CategoryContext from '../../context/CategoryContext'
+import { Category } from '../../entities/Category'
+import CategoryReducer from '../../reducers/CategoryReducer'
 
 interface Props {
 }

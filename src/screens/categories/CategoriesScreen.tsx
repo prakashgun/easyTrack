@@ -2,10 +2,10 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
 import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
-import deleteCategory from '../actions/categories/deleteCategory'
-import HeaderBar from '../components/HeaderBar'
-import CategoryContext from '../context/CategoryContext'
-import { Category } from '../entities/Category'
+import deleteCategory from '../../actions/categories/deleteCategory'
+import HeaderBar from '../../components/HeaderBar'
+import CategoryContext from '../../context/CategoryContext'
+import { Category } from '../../entities/Category'
 
 interface Props {
 }
