@@ -7,5 +7,6 @@ export default async (dispatch, expense) => {
     const expenseRepository = await getRepository(Expense, DB_CONNECTION_NAME)
     await expenseRepository.save(expense)
     console.log('Expense saved')
+    console.log(expense)
     dispatch({ type: 'EXPENSE_CREATED', payload: expense })
 }

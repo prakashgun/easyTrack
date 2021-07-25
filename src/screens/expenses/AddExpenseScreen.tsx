@@ -65,8 +65,10 @@ const AddExpenseScreen: React.FC<Props> = () => {
         const expense = new Expense()
         expense.name = name
         expense.value = value
-        expense.category = selectedCategory
-        expense.account = selectedAccount
+        expense.category = selectedCategory ? selectedCategory : categories[0]
+        expense.account = selectedAccount ? selectedAccount : accounts[0]
+        console.log('Before saving')
+        console.log(expense)
         await createExpenseAction(expensesDispatch, expense)
 
         navigation.navigate('Expenses')

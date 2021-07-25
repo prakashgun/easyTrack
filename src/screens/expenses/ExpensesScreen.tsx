@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import deleteExpenseAction from '../../actions/expenses/deleteExpenseAction'
 import { DB_CONNECTION_NAME } from '../../common/Utils'
 import HeaderBar from '../../components/HeaderBar'
 import DbContext from '../../context/DbContext'
 import ExpenseContext from '../../context/ExpenseContext'
 import { Expense } from '../../entities/Expense'
-import deleteExpenseAction from '../../actions/expenses/deleteExpenseAction'
 
 interface Props {
 }
@@ -22,6 +22,7 @@ const ExpensesScreen: React.FC<Props> = () => {
     useEffect(() => {
         if (dbConnection) {
             updateBalance()
+            console.log(expenses)
         } else {
             console.log('No db connection on expense screen')
         }
@@ -82,9 +83,10 @@ const ExpensesScreen: React.FC<Props> = () => {
                                     onPress={() => onDeletePress(expense)} />
                             }
                         >
-                            <Icon name="fastfood" />
+                            <Icon name={expense.category.icon_name} type={expense.category.icon_type} />
                             <ListItem.Content>
-                                <ListItem.Title>{expense.name}</ListItem.Title>
+                                <ListItem.Title>{expense.category.name}</ListItem.Title>
+                                <ListItem.Subtitle>{expense.account.name}</ListItem.Subtitle>
                             </ListItem.Content>
                             <ListItem.Content right={true}>
                                 <ListItem.Title>{expense.value}</ListItem.Title>

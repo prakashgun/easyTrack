@@ -25,12 +25,14 @@ export class Expense {
     updated_at: Date
 
     @ManyToOne(type => Account, account => account.expenses, {
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        nullable: false
     })
     account: Account
     
     @ManyToOne(type => Category, category => category.expenses, {
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        nullable: false
     })
     category: Category
 }
