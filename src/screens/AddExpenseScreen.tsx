@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
+import createExpense from '../actions/expenses/createExpense'
 import { DB_CONNECTION_NAME } from '../common/Utils'
 import HeaderBar from '../components/HeaderBar'
 import AccountContext from '../context/AccountContext'
@@ -20,10 +21,10 @@ const AddExpenseScreen: React.FC<Props> = () => {
     const [value, setValue] = useState(null)
     const [nameError, setNameError] = useState('')
     const [valueError, setValueError] = useState('')
-    const { categories, getCategories } = useContext(CategoryContext)
-    const { accounts, getAccounts } = useContext(AccountContext)
+    const { categories, categoriesDispatch } = useContext(CategoryContext)
+    const { accounts, accountsDispatch } = useContext(AccountContext)
     const navigation = useNavigation()
-    const { expenses, updateExpenses } = useContext(ExpenseContext)
+    const { expenses, expensesDispatch } = useContext(ExpenseContext)
     const [categoryExpanded, setCategoryExpanded] = useState(false)
     const [accountExpanded, setAccountExpanded] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<Category>()
@@ -64,9 +65,9 @@ const AddExpenseScreen: React.FC<Props> = () => {
         const expense = new Expense()
         expense.name = name
         expense.value = value
-        await expenseRepository.save(expense)
-        console.log('Expense saved')
-        await updateExpenses()
+        expense.category = selectedCategory
+        expense.account = selectedAccount
+        await createExpense(expensesDispatch, expense)
 
         navigation.navigate('Expenses')
     }

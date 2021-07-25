@@ -8,6 +8,7 @@ import HeaderBar from '../components/HeaderBar'
 import DbContext from '../context/DbContext'
 import ExpenseContext from '../context/ExpenseContext'
 import { Expense } from '../entities/Expense'
+import deleteExpense from '../actions/expenses/deleteExpense'
 
 interface Props {
 }
@@ -16,7 +17,7 @@ const ExpensesScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
     const { dbConnection, setUpConnection } = useContext(DbContext)
     const [balance, setBalance] = useState<Number>(0)
-    const { expenses, updateExpenses } = useContext(ExpenseContext)
+    const { expenses, expenseDispatch } = useContext(ExpenseContext)
 
     useEffect(() => {
         if (dbConnection) {
@@ -26,12 +27,9 @@ const ExpensesScreen: React.FC<Props> = () => {
         }
     }, [expenses])
 
-    const deleteExpense = async (expense: Expense) => {
+    const removeExpense = async (expense: Expense) => {
         console.log('Expense to be deleted', expense)
-        const expenseRepository = await getRepository(Expense, DB_CONNECTION_NAME)
-        await expenseRepository.remove(expense)
-        console.log('Expense deleted')
-        await updateExpenses()
+        await deleteExpense(expenseDispatch, expense)
         await updateBalance()
     }
 
@@ -57,7 +55,7 @@ const ExpensesScreen: React.FC<Props> = () => {
                 },
                 {
                     text: 'OK',
-                    onPress: () => deleteExpense(expense)
+                    onPress: () => removeExpense(expense)
                 }
             ]
         )

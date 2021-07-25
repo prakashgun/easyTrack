@@ -70,11 +70,11 @@ export default async (dispatch) => {
             .execute()
 
         console.log('Default categories saved')
-        const categories = await categoryRepository.find({ take: 10000 })
+        const categories = await categoryRepository.find()
         dispatch({ type: 'CREATED_DEFAULT_CATEGORIES', payload: categories })
 
     } else {
-        const categories = await categoryRepository.find({ take: 10000 })
+        const categories = await categoryRepository.find()
         dispatch({ type: 'GET_EXISTING_CATEGORIES', payload: categories })
     }
 }

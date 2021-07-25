@@ -17,7 +17,7 @@ export default async (dispatch) => {
         dispatch({ type: 'CREATED_DEFAULT_ACCOUNTS', payload: account1 })
 
     } else {
-        const accounts = await accountRepository.find({ take: 10000 })
+        const accounts = await accountRepository.find()
         dispatch({ type: 'GET_EXISTING_ACCOUNTS', payload: accounts })
     }
 }
