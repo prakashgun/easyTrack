@@ -8,7 +8,7 @@ import HeaderBar from '../../components/HeaderBar'
 import DbContext from '../../context/DbContext'
 import ExpenseContext from '../../context/ExpenseContext'
 import { Expense } from '../../entities/Expense'
-import deleteExpense from '../../actions/expenses/deleteExpense'
+import deleteExpenseAction from '../../actions/expenses/deleteExpenseAction'
 
 interface Props {
 }
@@ -29,7 +29,7 @@ const ExpensesScreen: React.FC<Props> = () => {
 
     const removeExpense = async (expense: Expense) => {
         console.log('Expense to be deleted', expense)
-        await deleteExpense(expensesDispatch, expense)
+        await deleteExpenseAction(expensesDispatch, expense)
         await updateBalance()
     }
 

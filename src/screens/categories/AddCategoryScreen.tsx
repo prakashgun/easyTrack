@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import createCategory from '../../actions/categories/createCategory'
+import createCategoryAction from '../../actions/categories/createCategoryAction'
 import { DB_CONNECTION_NAME } from '../../common/Utils'
 import HeaderBar from '../../components/HeaderBar'
 import CategoryContext from '../../context/CategoryContext'
@@ -103,7 +103,7 @@ const AddCategoryScreen: React.FC<Props> = () => {
         category.name = name
         category.icon_name = icon.icon_name
         category.icon_type = icon.icon_type
-        await createCategory(categoriesDispatch, category)
+        await createCategoryAction(categoriesDispatch, category)
 
         navigation.navigate('Categories')
     }

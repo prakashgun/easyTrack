@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { LogBox } from 'react-native'
 import 'react-native-gesture-handler'
 import { Connection } from 'typeorm/browser'
-import createDefaultAccounts from './src/actions/accounts/createDefaultAccounts'
-import createDefaultCategories from './src/actions/categories/createDefaultCategories'
-import loadExpenses from './src/actions/expenses/loadExpenses'
+import createDefaultAccountsAction from './src/actions/accounts/createDefaultAccountsAction'
+import createDefaultCategoriesAction from './src/actions/categories/createDefaultCategoriesAction'
+import loadExpenses from './src/actions/expenses/loadExpensesAction'
 import Utils from './src/common/Utils'
 import AccountContext from './src/context/AccountContext'
 import CategoryContext from './src/context/CategoryContext'
@@ -31,8 +31,8 @@ const App = (props: Props) => {
 
   const setUpConnection = useCallback(async () => {
     setDbConnection(await Utils.createConnection())
-    await createDefaultAccounts(accountsDispatch)
-    await createDefaultCategories(categoriesDispatch)
+    await createDefaultAccountsAction(accountsDispatch)
+    await createDefaultCategoriesAction(categoriesDispatch)
     await loadExpenses(expensesDispatch)
   }, [])
 
@@ -40,8 +40,8 @@ const App = (props: Props) => {
     if (!dbConnection) {
       setUpConnection()
     } else {
-      createDefaultAccounts(accountsDispatch)
-      createDefaultCategories(categoriesDispatch)
+      createDefaultAccountsAction(accountsDispatch)
+      createDefaultCategoriesAction(categoriesDispatch)
       loadExpenses(expensesDispatch)
     }
   }, [])

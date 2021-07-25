@@ -6,6 +6,8 @@ export default (state,action) => {
             return action.payload
         case 'ACCOUNT_CREATED':
             return [...state, action.payload]
+        case 'ACCOUNT_DELETED':
+            return state.filter(account => account != action.payload)            
         default:
             throw new Error('Invalid action type in Accounts reducer')
     }

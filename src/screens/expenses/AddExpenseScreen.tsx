@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import createExpense from '../../actions/expenses/createExpense'
+import createExpenseAction from '../../actions/expenses/createExpenseAction'
 import { DB_CONNECTION_NAME } from '../../common/Utils'
 import HeaderBar from '../../components/HeaderBar'
 import AccountContext from '../../context/AccountContext'
@@ -67,7 +67,7 @@ const AddExpenseScreen: React.FC<Props> = () => {
         expense.value = value
         expense.category = selectedCategory
         expense.account = selectedAccount
-        await createExpense(expensesDispatch, expense)
+        await createExpenseAction(expensesDispatch, expense)
 
         navigation.navigate('Expenses')
     }

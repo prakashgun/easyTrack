@@ -3,11 +3,11 @@ import React, { useContext, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import createAccount from '../actions/accounts/createAccount'
-import { DB_CONNECTION_NAME } from '../common/Utils'
-import HeaderBar from '../components/HeaderBar'
-import AccountContext from '../context/AccountContext'
-import { Account } from '../entities/Account'
+import createAccountAction from '../../actions/accounts/createAccountAction'
+import { DB_CONNECTION_NAME } from '../../common/Utils'
+import HeaderBar from '../../components/HeaderBar'
+import AccountContext from '../../context/AccountContext'
+import { Account } from '../../entities/Account'
 
 interface Props {
 }
@@ -43,7 +43,7 @@ const AddAccountScreen: React.FC<Props> = () => {
         const account = new Account()
         account.name = name
         account.balance = balance
-        await createAccount(accountsDispatch, account)
+        await createAccountAction(accountsDispatch, account)
 
         navigation.navigate('Accounts')
     }

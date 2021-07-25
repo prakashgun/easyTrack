@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
 import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
-import deleteCategory from '../../actions/categories/deleteCategory'
+import deleteCategoryAction from '../../actions/categories/deleteCategoryAction'
 import HeaderBar from '../../components/HeaderBar'
 import CategoryContext from '../../context/CategoryContext'
 import { Category } from '../../entities/Category'
@@ -16,7 +16,7 @@ const CategoriesScreen: React.FC<Props> = () => {
 
     const removeCategory = async (category: Category) => {
         console.log('Category to be deleted', category)
-        await deleteCategory(categoriesDispatch, category)
+        await deleteCategoryAction(categoriesDispatch, category)
     }
 
     const onDeletePress = (category: Category) => {

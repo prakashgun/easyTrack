@@ -4,11 +4,12 @@ import { useEffect } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import { DB_CONNECTION_NAME } from '../common/Utils'
-import HeaderBar from '../components/HeaderBar'
-import AccountContext from '../context/AccountContext'
-import DbContext from '../context/DbContext'
-import { Account } from '../entities/Account'
+import deleteAccountAction from '../../actions/accounts/deleteAccountAction'
+import { DB_CONNECTION_NAME } from '../../common/Utils'
+import HeaderBar from '../../components/HeaderBar'
+import AccountContext from '../../context/AccountContext'
+import DbContext from '../../context/DbContext'
+import { Account } from '../../entities/Account'
 
 interface Props {
 }
@@ -27,11 +28,9 @@ const AccountsScreen: React.FC<Props> = () => {
         }
     }, [accounts])
 
-    const deleteAccount = async (account: Account) => {
+    const removeAccount = async (account: Account) => {
         console.log('Account to be deleted', account)
-        const accountRepository = await getRepository(Account, DB_CONNECTION_NAME)
-        await accountRepository.remove(account)
-        console.log('Account deleted')
+        await deleteAccountAction(accountsDispatch, account)
         await updateBalance()
     }
 
@@ -57,7 +56,7 @@ const AccountsScreen: React.FC<Props> = () => {
                 },
                 {
                     text: 'OK',
-                    onPress: () => deleteAccount(account)
+                    onPress: () => removeAccount(account)
                 }
             ]
         )

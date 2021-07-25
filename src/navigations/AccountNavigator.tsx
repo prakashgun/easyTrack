@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import AccountsScreen from '../screens/AccountsScreen'
-import AddAccountScreen from '../screens/AddAccountScreen'
+import AccountsScreen from '../screens/accounts/AccountsScreen'
+import AddAccountScreen from '../screens/accounts/AddAccountScreen'
 
 export default function AccountNavigator() {
     const Stack = createStackNavigator()
