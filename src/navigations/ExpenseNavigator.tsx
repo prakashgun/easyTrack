@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import AddExpenseScreen from '../screens/AddExpenseScreen'
-import ExpensesScreen from '../screens/ExpensesScreen'
+import AddExpenseScreen from '../screens/expenses/AddExpenseScreen'
+import ExpensesScreen from '../screens/expenses/ExpensesScreen'
 
 export default function ExpenseNavigator() {
     const Stack = createStackNavigator()

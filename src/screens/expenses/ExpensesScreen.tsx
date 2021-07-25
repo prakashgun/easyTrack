@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, ListItem } from 'react-native-elements'
 import { getRepository } from 'typeorm/browser'
-import { DB_CONNECTION_NAME } from '../common/Utils'
-import HeaderBar from '../components/HeaderBar'
-import DbContext from '../context/DbContext'
-import ExpenseContext from '../context/ExpenseContext'
-import { Expense } from '../entities/Expense'
-import deleteExpense from '../actions/expenses/deleteExpense'
+import { DB_CONNECTION_NAME } from '../../common/Utils'
+import HeaderBar from '../../components/HeaderBar'
+import DbContext from '../../context/DbContext'
+import ExpenseContext from '../../context/ExpenseContext'
+import { Expense } from '../../entities/Expense'
+import deleteExpense from '../../actions/expenses/deleteExpense'
 
 interface Props {
 }
@@ -17,7 +17,7 @@ const ExpensesScreen: React.FC<Props> = () => {
     const navigation = useNavigation()
     const { dbConnection, setUpConnection } = useContext(DbContext)
     const [balance, setBalance] = useState<Number>(0)
-    const { expenses, expenseDispatch } = useContext(ExpenseContext)
+    const { expenses, expensesDispatch } = useContext(ExpenseContext)
 
     useEffect(() => {
         if (dbConnection) {
@@ -29,7 +29,7 @@ const ExpensesScreen: React.FC<Props> = () => {
 
     const removeExpense = async (expense: Expense) => {
         console.log('Expense to be deleted', expense)
-        await deleteExpense(expenseDispatch, expense)
+        await deleteExpense(expensesDispatch, expense)
         await updateBalance()
     }
 
